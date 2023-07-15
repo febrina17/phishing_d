@@ -1,0 +1,105 @@
+header {
+    background-color: #6A0572;
+    color: #FFF;
+    padding: 10px 20px;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+  }
+  
+  .nav-links li {
+    margin-left: 25px;
+  }
+  
+  .nav-links a {
+    color: #FFF;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-links a:hover {
+    color: #0D6EFD;
+  }
+
+.nav-links a:hover,
+.nav-links a:focus {
+  font-size: 18px;
+}
+  
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+    20%, 40%, 60%, 80% { transform: translateX(2px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .logo:hover {
+    animation: shake 0.4s;
+    animation-iteration-count: infinite;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .input-section {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  #url-input {
+    width: 70%;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  #scan-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #0D6EFD;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .result-section {
+    margin-top: 20px;
+  }
+  
+  #url-output {
+    font-weight: bold;
+  }
+  
+  #status-output {
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+  .safe {
+    background-color: #28A745;
+    color: #FFF;
+  }
+  
+  .dangerous {
+    background-color: #DC3545;
+    color: #FFF;
+  }
+  

@@ -1,0 +1,173 @@
+import joblib
+
+# Memuat model dari file pickle
+model = joblib.load('model_gradientboosting.pkl')
+
+# Mengakses atribut joblib_version
+joblib_version = model.joblib_version
+
+# Menampilkan versi joblib
+print("Versi Joblib: ", joblib_version)
+
+
+
+app = Flask(__name__, template_folder='template')
+def loaded_model():
+    with open('model_gradientboosting.pkl', 'rb') as file:
+        model = pickle.load(file)
+    return model
+
+model = loaded_model()
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/cekurl', methods=['POST'])
+def cekurl():
+    return "oke"
+
+@app.route('/scan', methods=['POST'])
+def scan():
+    url = requests.form['url']
+    
+    try:
+        response = request.get(url)
+        content = response.txt
+    
+    except:
+        return render_template('result.html', result='Invalid URL')
+    
+    prediction = model.predict([content])[0]
+    
+    if prediction == 'phishing':
+        result = 'URL Berbahaya!'
+    else:
+        result = 'URL aman'
+        
+    return render_template('result.html', result='result')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+    
+    ========================================
+
+    from flask import Flask, request, render_template
+import requests
+import pickle
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+import warnings
+import requests
+warnings.filterwarnings('ignore')
+from feature import extract_features
+
+
+file = open('model_gradientboosting.pkl','rb')
+gr = pickle.load(file)
+file.close()
+
+app = Flask(__name__)
+
+@app.route('/scan', methods=["GET", "POST"])
+def index():
+    
+    if request.method == "POST":
+        
+        url = request.form["url"]
+        features = extract_features([url])
+        x = np.array(features()).reshape(1,-1)
+        
+        y_pred = gr.predict(x)[0]
+        y_pro_phishing = gr.predict_proba(x)[0,0]
+        y_pro_non_phishing = gr.predict_proba(x)[0,1]
+        pred = 'it is {0:2f}% safe to go'.format(y_pro_phishing*100)
+        payload_scoring = {"input_data":[{"field":[["UsingIP","LongURL","ShortURL","Symbol@,'Redirecting//","SubDomains ","HTTPS","DomainRegLen","Favicon","NonStdPort","HTTPSDomainURL","RequestURL","AnchorURL","LinksInScriptTags","ServerFormHandler","ServerFormHandler","AbnormalURL","WebsiteForwarding","StatusBarCust","DisableRightClick","UsingPopupWindow","IframeRedirection","IframeRedirection","DNSRecording","WebsiteTraffic","PageRank","GoogleIndex","LinksPointingToPage","StatsReport","class"
+                                                    ]], "values" :[[1,1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,-1,1,1,1,0,1,1,1,1,-1,-1,-1,-1,1,0,1]]}]}
+        response_scoring = requests.post('', json=payload_scoring)
+        print("Scoring Response")
+        predictions=response_scoring.json()
+        pred=print(predictions['predictions'][0]['values'][0][0])
+        return render_template('indext.html' ,xx =round(y_pro_non_phishing, 2),url=url)
+    return render_template("index.html", xx=-1)
+
+if __name__=="__main__":
+    app.run(debug=True,port=2020)
+
+
+    ======================================== indexhtmlnya
+
+
+
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <link rel="stylesheet" type="text/css" href="style.css">
+      
+    <title>Document</title>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="logo">
+      <h1>Check URL</h1>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">About Me</a></li>
+      <li><a href="#">Info</a></li>
+    </ul>
+  </nav>
+</header>
+
+    <div class="container">
+      <h2>Ayo Check URL Nya!</h2>
+      <div class="input-section">
+        <form action="/scan" method="post">
+          <input type="text" name="url" id="url-input" placeholder="Masukkan URL di sini">
+          <input type="submit" id="scan-button" value="Scan">
+        </form>
+      </div>
+      <div class="result-section">
+        <h3>Berikut hasil:</h3>
+        <p id="url-output"></p>
+        <div id="status-output"></div>
+      </div>
+    </div>
+
+  
+
+</body>
+</html>
+
+
+
+feature.py
+
+
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+
+def extract_features(data):
+    vectorizer = CountVectorizer()
+    features = vectorizer.fit_transform(data)
+    return vectorizer, features.toarray()
+
+def get_features(url):
+    return [url]
+
+def extract_and_transform(url):
+    data = get_features(url)
+    vectorizer, features = extract_features(data)
+    feature_names = vectorizer.get_feature_names_out()
+    df = pd.DataFrame(features, columns=feature_names)
+    return df
+
+url = 'http://www.google.com'  # Ganti dengan URL yang ingin Anda ekstraksi fiturnya
+df = extract_and_transform(url)
+print(df)

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <link rel="stylesheet" type="text/css" href="style.css">
+      
+    <title>Document</title>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="logo">
+      <h1>Check URL</h1>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">About Me</a></li>
+      <li><a href="#">Info</a></li>
+    </ul>
+  </nav>
+</header>
+
+    <div class="container">
+      <h2>Ayo Check URL Nya!</h2>
+      <div class="input-section">
+        <form action="/scan" method="post">
+          <input type="text" name="url" id="url-input" placeholder="Masukkan URL di sini">
+          <input type="submit" id="scan-button" value="Scan">
+        </form>
+      </div>
+      <div class="result-section">
+        <h3>Berikut hasil:</h3>
+        <p id="url-output"></p>
+        <div id="status-output"></div>
+      </div>
+    </div>
+
+  
+
+</body>
+</html>
